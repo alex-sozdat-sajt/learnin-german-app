@@ -4,7 +4,6 @@ import Home from '../views/Home.vue'
 import Books from '../views/Books.vue'
 import Book from '../views/Book.vue'
 import BookPart from '../views/BookPart.vue'
-
 import Signin from '../views/Signin.vue'
 import Signup from '../views/Signup.vue'
 import Words from '../views/Words.vue'
@@ -33,7 +32,7 @@ const routes = [{
         component: Book
     },
     {
-        path: '/books/:bookid/part/:partId',
+        path: '/books/:bookId/part/:partId',
         name: 'bookPart',
         props: true,
         component: BookPart

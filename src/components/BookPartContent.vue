@@ -1,9 +1,74 @@
 <template>
   <div>
-        <v-card>
+        <v-card class="pa-2">
+            <div>
             <div class="display-1">{{part.bookTitle}}</div>
             <div class="headLine">{{part.partTitle}}</div>
+            <div class="headLine">{{this.$vuetify.breakpoint.name}}</div>
+
             <v-divider class="black"></v-divider>
+            </div>
+            <div class="text-xs-center mt-2 mb-2 primary">
+                <youtube :video-id="part.youtube_id"
+                :player-width="playerWidth"
+                ></youtube>
+            </div>
+            <div class='mt-2'>
+                <v-slider v-model="fontSize" :label="`Размер шрифта (${fontSize})`"
+                step="1" max="30" min="10" tick-size="5"
+                ></v-slider>
+              <v-tabs v-model="tabMode" color="accent"   fixed-tabs
+              slider-color="success"
+              >
+                  <v-tab :key="'german'" ripple>
+                      Текст с подсказками
+                  </v-tab>
+                  <v-tab :key="'sidebyside'" ripple>
+                     
+                          Параллельно
+                     
+                  </v-tab>
+                  <v-tab-item :key="'german'">
+                       <div v-for="(paragraph, i) in part.content" :key="`par1${i}`">
+                           <span>&nbsp; </span>
+                           <span v-for="(sentence, y) in paragraph.sentences" 
+                           :key="`par1${i}sent1${y}`"
+                           :style="textStyle"
+                           >
+                                <span>
+                                  {{sentence.originText}}  
+                                </span>
+                                <v-icon size="textStyle" @click.prevent="toggleVisibility(i,y)" style="cursor:pointer">mdi-help</v-icon>
+                                <span v-if="getVisibilityFlag(i,y).value" class="success--text" style="font-weight:bold">
+                                    {{sentence.transText}}
+                                </span>
+                           
+                           </span>
+                        </div>   
+                  </v-tab-item>
+                  <v-tab-item :key="'sidebyside'">
+                       <v-container>
+                        <v-layout row wrap v-for="(paragraph, i) in part.content"
+                         :key="`par2${i}`"
+                         :style="textStyle"
+                         >
+                              <v-flex xs6>  
+                                     <span>&nbsp; </span>
+                                       <span v-for="(sentence, y) in paragraph.sentences" :key="`par2${i}sent2${y}_orig`">
+                                             <span>  {{sentence.originText}}  </span>
+                                       </span>    
+                              </v-flex>
+                               <v-flex xs6>  
+                                     <span>&nbsp; </span>
+                                       <span v-for="(sentence, y) in paragraph.sentences" :key="`par2${i}sent2${y}_trans`">
+                                              <span>   {{sentence.transText}}  </span>
+                                       </span>    
+                              </v-flex>    
+                         </v-layout> 
+                       </v-container>
+                  </v-tab-item>
+                  </v-tabs>
+            </div>
         </v-card>
       
        
@@ -11,7 +76,7 @@
   </div>
 </template>
 <script>
-import BookParamContent from '../components/BookPartContent'
+ 
 export default {
     props:{
         "part":{
@@ -19,12 +84,59 @@ export default {
             required:true
         }
     },
-    components:{
-        BookParamContent
+    data(){
+        return {
+            tabMode: 'german',
+            visibilityKeys: [],
+            fontSize: 18
 
+        }
+
+    },
+    components:{
+       
+
+    },
+    computed:{
+         playerWidth(){
+          switch (this.$vuetify.breakpoint.name) {
+          case 'xs': return '220px'
+          case 'sm': return '400px'
+          case 'md': return '500px'
+          case 'lg': return '600px'
+          case 'xl': return '800px'
+        }
+         },
+         textStyle(){
+            return{fontSize:`${this.fontSize}px`}
+        },
+         
+ 
+    },
+    methods:{
+        getVisibilityFlag(i,y){
+            return this.visibilityKeys.find(k => k.key == `${i}${y}`)
+        },
+        toggleVisibility(i,y){
+            let flag = this.getVisibilityFlag(i,y)
+            flag.value = !flag.value
+        }
+        
+    },
+    created(){
+        for(var i=0; i<this.part.content.length; i++){
+             for(var y=0; y<this.part.content[i].sentences.length; y++){
+                this.visibilityKeys.push({
+                    key:`${i}${y}`,
+                    value: false
+                })
+             }
+        }
     }
+
    
 
 };
 </script>
 <style scoped></style>
+ 

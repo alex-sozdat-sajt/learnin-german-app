@@ -7,7 +7,7 @@
                </v-flex>   
                <v-flex v-for='part in book.parts' :key="part.id" xs12 sm10 offset-sm1>
                   <book-part-list-item :part="part"
-                  bookId="book.id"
+                  :bookId="book.id"
                   ></book-part-list-item>
                </v-flex>
 
@@ -23,7 +23,7 @@
 // @ is an alias to /src
  
 
-import BooksList from '../components/BooksList'
+ 
 import BookDetails from '../components/BookDetails'
 import BookPartListItem from '../components/BookPartListItem'
 

@@ -5,6 +5,9 @@
         
         <v-card-title primary-title class="headline">{{part.title}}</v-card-title>
         <v-card-actions>
+            "Эта страница"
+            {{bookId}}
+            {{part.id}}
             <v-spacer></v-spacer>
             <v-btn  class="primary" :to="{name:'bookPart', params:{bookId:bookId, partId:part.id}}">Открыть</v-btn>
         </v-card-actions>
